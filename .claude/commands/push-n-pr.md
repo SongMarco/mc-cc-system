@@ -1,6 +1,6 @@
 ---
-description: 스모크 테스트 + 푸시 + PR 생성을 일괄 수행한다
-allowed-tools: Bash(git status:*), Bash(git log:*), Bash(git push:*), Bash(npm run test:*), Bash(git diff:*), Bash(gh pr create:*), Bash(git branch:*)
+description: 푸시 + PR 생성을 일괄 수행한다
+allowed-tools: Bash(git status:*), Bash(git log:*), Bash(git push:*), Bash(git diff:*), Bash(gh pr create:*), Bash(git branch:*)
 argument-hint: [base-branch]
 ---
 
