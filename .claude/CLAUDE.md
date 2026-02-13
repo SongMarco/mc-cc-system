@@ -56,9 +56,9 @@ src/
 
 ```typescript
 interface ApiResponse<T> {
-  success: boolean
-  data?: T
-  error?: string
+  success: boolean;
+  data?: T;
+  error?: string;
 }
 ```
 
@@ -66,11 +66,11 @@ interface ApiResponse<T> {
 
 ```typescript
 try {
-  const result = await operation()
-  return { success: true, data: result }
+  const result = await operation();
+  return { success: true, data: result };
 } catch (error) {
-  console.error('Operation failed:', error)
-  return { success: false, error: 'User-friendly message' }
+  console.error("Operation failed:", error);
+  return { success: false, error: "User-friendly message" };
 }
 ```
 
@@ -87,10 +87,25 @@ DEBUG=false
 
 ## Available Commands
 
-- `/tdd` - Test-driven development workflow
-- `/plan` - Create implementation plan
-- `/code-review` - Review code quality
-- `/build-fix` - Fix build errors
+| 커맨드                          | 설명                                     | 위치    |
+| ------------------------------- | ---------------------------------------- | ------- |
+| `/commit`                       | conventional commit 기반 한국어 커밋     | skill   |
+| `/pr [base]`                    | PR 생성                                  | skill   |
+| `/push`                         | 스모크 테스트 후 푸시                    | skill   |
+| `/push-n-pr [base]`             | 푸시 + PR 생성 일괄 수행                 | skill   |
+| `/review-pr`                    | PR 리뷰                                  | skill   |
+| `/feedback-pr`                  | PR 인라인 코멘트 피드백                  | skill   |
+| `/db-run`                       | 개발 DB SQL 쿼리 실행                    | skill   |
+| `/skill-creator`                | 새로운 skill 생성/검증                   | skill   |
+| `/review-plan`                  | 구현 계획을 staff engineer 관점에서 리뷰 | skill   |
+| `/ticket-destroyer [plan\|fix]` | 이슈 분석, plan 시 계획, fix 시 수정+PR  | skill   |
+| `/find-aws-logs`                | ECS CloudWatch 로그 검색                 | skill   |
+| `/hook-creator`                 | Claude Code hook 생성                    | skill   |
+| `/slash-command-creator`        | 슬래시 커맨드 생성                       | skill   |
+| `/subagent-creator`             | 서브에이전트 생성                        | skill   |
+| `/youtube-collector`            | YouTube 채널 영상 수집                   | skill   |
+| `/db-query`                     | SQL 쿼리 파일 생성                       | command |
+| `/figma-spec`                   | Figma 디자인 -> 백엔드 명세서            | command |
 
 ## Git Workflow
 
