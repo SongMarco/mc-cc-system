@@ -100,7 +100,7 @@ git -C "{repo_path}" log --all \
 
 ### 4. 브랜치 그룹핑 + AI 요약
 
-#### monorepo 커밋 (friendly-pharmacist-platform)
+#### monorepo 커밋
 
 각 커밋의 브랜치를 추적한다:
 
@@ -108,15 +108,16 @@ git -C "{repo_path}" log --all \
 git -C "{repo_path}" name-rev --name-only {commit_hash}
 ```
 
-브랜치명에서 버전 prefix를 추출하여 그룹명으로 사용한다:
+브랜치명에서 버전 prefix를 추출하여 그룹명으로 사용한다.
+예시 (프로젝트에 맞게 조정):
 
-| 브랜치 패턴                      | 그룹명          |
-| -------------------------------- | --------------- |
-| `web-X.Y.Z` 또는 `web/...`       | web-X.Y.Z       |
-| `app-X.Y.Z` 또는 `app/...`       | app-X.Y.Z       |
-| `connect/...` 또는 `connect-...` | 커넥트          |
-| `infra/...`                      | 인프라          |
-| `main`, `develop` 등             | 브랜치명 그대로 |
+| 브랜치 패턴                  | 그룹명          |
+| ---------------------------- | --------------- |
+| `web-X.Y.Z` 또는 `web/...`   | web-X.Y.Z       |
+| `app-X.Y.Z` 또는 `app/...`   | app-X.Y.Z       |
+| `admin/...` 또는 `admin-...` | 어드민          |
+| `infra/...`                  | 인프라          |
+| `main`, `develop` 등         | 브랜치명 그대로 |
 
 #### 외부 저장소
 
