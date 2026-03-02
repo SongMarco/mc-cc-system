@@ -1,0 +1,17 @@
+{
+  "name": "mc-cc",
+  "version": "1.0.0",
+  "description": "Claude Code development workflow skills - commit, PR, review, DB, deployment, plugin creation, and more",
+  "author": {
+    "name": "SongMarco"
+  },
+  "license": "MIT",
+  "keywords": [
+    "workflow",
+    "devtools",
+    "commit",
+    "pr",
+    "review",
+    "deployment"
+  ]
+}

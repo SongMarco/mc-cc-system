@@ -104,6 +104,7 @@ DEBUG=false
 | `/slash-command-creator`        | 슬래시 커맨드 생성                       | skill   |
 | `/subagent-creator`             | 서브에이전트 생성                        | skill   |
 | `/youtube-collector`            | YouTube 채널 영상 수집                   | skill   |
+| `/pluginize [name]`            | 프로젝트를 Claude Code Plugin으로 변환   | skill   |
 | `/db-query`                     | SQL 쿼리 파일 생성                       | command |
 | `/figma-spec`                   | Figma 디자인 -> 백엔드 명세서            | command |
 
