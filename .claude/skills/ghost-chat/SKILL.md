@@ -32,6 +32,19 @@ Claude 서브에이전트가 중재자 역할을 하며, `tmux send-keys`로 각
 - `--a`, `--b`는 필수. 없으면 사용자에게 확인한다.
 - tmux 세션 이름은 `--a`, `--b` 값을 그대로 사용한다 (예: `--a w1` → 세션명 `w1`).
 
+#### 권한 우회 플래그 자동 적용
+
+세션을 새로 생성하여 CLI를 실행할 때, 에이전트가 권한 승인 프롬프트에서 멈추지 않도록 아래 플래그를 자동으로 붙인다:
+
+| CLI 명령 (포함 여부로 판별) | 권한 우회 플래그                              |
+| --------------------------- | --------------------------------------------- |
+| `claude`                    | `--dangerously-skip-permissions`               |
+| `codex`                     | `--dangerously-bypass-approvals-and-sandbox`   |
+
+- `--a`, `--b` 값이나 해당 alias가 resolve하는 명령에 위 키워드가 포함되면 자동 적용한다.
+- 이미 해당 플래그가 포함되어 있으면 중복 추가하지 않는다.
+- 알 수 없는 CLI는 플래그 없이 실행한다.
+
 ### 2. tmux 세션 자동 준비
 
 각 에이전트에 대해:
@@ -42,7 +55,10 @@ tmux has-session -t {세션명} 2>/dev/null
 if [ $? -ne 0 ]; then
     tmux new-session -d -s {세션명}
     sleep 2  # 셸 초기화 대기
-    tmux send-keys -t {세션명} '{CLI명령}'
+    # CLI 명령에 권한 우회 플래그를 자동 추가한다
+    # 예: claude → 'claude --dangerously-skip-permissions'
+    #     codex  → 'codex --dangerously-bypass-approvals-and-sandbox'
+    tmux send-keys -t {세션명} '{CLI명령} {권한우회플래그}'
     tmux send-keys -t {세션명} C-m
     sleep 5  # 에이전트 시작 대기
 fi
@@ -52,6 +68,8 @@ fi
 
 에이전트 준비 확인: `tmux capture-pane -t {세션명} -p -S -10`으로 프롬프트가 떴는지 확인한다.
 준비되지 않았으면 5초 간격으로 최대 30초 대기.
+
+**Codex 특수 처리**: Codex는 시작 시 trust 확인 프롬프트가 나타난다. `capture-pane`으로 "trust" 또는 "Yes, continue"가 감지되면 `C-m`을 전송하여 자동 승인한다.
 
 ### 3. 대화 파일 처리
 
