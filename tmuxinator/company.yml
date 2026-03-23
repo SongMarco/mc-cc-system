@@ -1,0 +1,62 @@
+# company.yml - 회사 프로젝트용 tmux 세션
+#
+# 사용법:
+#   tmuxinator start company    # 세션 시작
+#   tmuxinator stop company     # 세션 종료
+#
+# 새 프로젝트 추가 시:
+#   windows 아래에 항목을 추가한다.
+#   각 window는 tiled 레이아웃에 4개의 pane을 가진다.
+#   root에 프로젝트 경로를 지정한다.
+#
+# 구조:
+#   back-main        - 백엔드 메인 작업 (worktree wt1)
+#   back-sub         - 백엔드 서브 작업 (worktree wt2)
+#   back-code-review - 백엔드 코드 리뷰 (worktree wt3)
+#   back-hotfix      - 백엔드 핫픽스 (worktree wt4)
+#   front            - 프론트엔드 작업
+
+name: company
+attach: false
+
+windows:
+  - back-main:
+      root: ~/Documents/projects/friendly-pharmacist-platform.worktrees/wt1
+      layout: tiled
+      panes:
+        -
+        -
+        -
+        -
+  - back-sub:
+      root: ~/Documents/projects/friendly-pharmacist-platform.worktrees/wt2
+      layout: tiled
+      panes:
+        -
+        -
+        -
+        -
+  - back-code-review:
+      root: ~/Documents/projects/friendly-pharmacist-platform.worktrees/wt3
+      layout: tiled
+      panes:
+        -
+        -
+        -
+        -
+  - back-hotfix:
+      root: ~/Documents/projects/friendly-pharmacist-platform.worktrees/wt4
+      layout: tiled
+      panes:
+        -
+        -
+        -
+        -
+  - front:
+      root: ~/Documents/projects/pharma_bros_fe
+      layout: tiled
+      panes:
+        -
+        -
+        -
+        -
