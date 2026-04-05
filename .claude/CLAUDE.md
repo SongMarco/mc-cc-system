@@ -1,88 +1,19 @@
-# Example Project CLAUDE.md
+# mc-cc-system
 
-This is an example project-level CLAUDE.md file. Place this in your project root.
+Claude Code skill, agent, command, scheduled task를 관리하는 워크플로우 툴킷. 플러그인(`plugins/mc-cc/`)으로 배포 가능.
 
-## Project Overview
-
-[Brief description of your project - what it does, tech stack]
-
-## Critical Rules
-
-### 1. Code Organization
-
-- Many small files over few large files
-- High cohesion, low coupling
-- 200-400 lines typical, 800 max per file
-- Organize by feature/domain, not by type
-
-### 2. Code Style
-
-- No emojis in code, comments, or documentation
-- Immutability always - never mutate objects or arrays
-- No console.log in production code
-- Proper error handling with try/catch
-- Input validation with Zod or similar
-
-### 3. Testing
-
-- TDD: Write tests first
-- 80% minimum coverage
-- Unit tests for utilities
-- Integration tests for APIs
-- E2E tests for critical flows
-
-### 4. Security
-
-- No hardcoded secrets
-- Environment variables for sensitive data
-- Validate all user inputs
-- Parameterized queries only
-- CSRF protection enabled
-
-## File Structure
+## 구조
 
 ```
-src/
-|-- app/              # Next.js app router
-|-- components/       # Reusable UI components
-|-- hooks/            # Custom React hooks
-|-- lib/              # Utility libraries
-|-- types/            # TypeScript definitions
-```
-
-## Key Patterns
-
-### API Response Format
-
-```typescript
-interface ApiResponse<T> {
-  success: boolean;
-  data?: T;
-  error?: string;
-}
-```
-
-### Error Handling
-
-```typescript
-try {
-  const result = await operation();
-  return { success: true, data: result };
-} catch (error) {
-  console.error("Operation failed:", error);
-  return { success: false, error: "User-friendly message" };
-}
-```
-
-## Environment Variables
-
-```bash
-# Required
-DATABASE_URL=
-API_KEY=
-
-# Optional
-DEBUG=false
+.claude/
+├── skills/           # 인터랙티브 슬래시 커맨드 (17개)
+├── agents/           # 서브에이전트 (2개)
+└── commands/         # 일반 커맨드 (2개)
+scheduled-tasks/      # Claude Code Desktop 스케줄 태스크
+plugins/mc-cc/        # 플러그인 배포용 미러
+prompt/               # 프롬프트 템플릿
+tmuxinator/           # tmux 세션 설정
+dotfiles/             # 커스텀 dotfile
 ```
 
 ## Available Commands
@@ -108,6 +39,15 @@ DEBUG=false
 | `/remind [cmd]`                 | 멀티 인스턴스 작업 상태 추적             | skill   |
 | `/db-query`                     | SQL 쿼리 파일 생성                       | command |
 | `/figma-spec`                   | Figma 디자인 -> 백엔드 명세서            | command |
+
+## Scheduled Tasks
+
+`scheduled-tasks/` 디렉토리에서 관리. `deploy.sh`로 `~/.claude/scheduled-tasks/`에 symlink 배포.
+Discord 전송에 `plugin:discord:discord` MCP 플러그인 필요. 상세는 `scheduled-tasks/README.md` 참고.
+
+| 이름 | 스케줄 | 채널 | 설명 |
+|------|--------|------|------|
+| tech-news-briefing | 매일 07:00 KST | Discord #tech_news | 테크 뉴스 수집 및 브리핑 |
 
 ## Git Workflow
 

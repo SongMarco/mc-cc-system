@@ -1,0 +1,95 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1774272392627,
+  "projectRoot": "/Users/youngchansong/Documents/projects/mc-cc-system",
+  "techStack": {
+    "languages": [],
+    "frameworks": [],
+    "packageManager": null,
+    "runtime": null
+  },
+  "build": {
+    "buildCommand": null,
+    "testCommand": null,
+    "lintCommand": null,
+    "devCommand": null,
+    "scripts": {}
+  },
+  "conventions": {
+    "namingStyle": null,
+    "importStyle": null,
+    "testPattern": null,
+    "fileOrganization": null
+  },
+  "structure": {
+    "isMonorepo": false,
+    "workspaces": [],
+    "mainDirectories": [
+      "docs"
+    ],
+    "gitBranches": {
+      "defaultBranch": "main",
+      "branchingStrategy": null
+    }
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "docs": {
+      "path": "docs",
+      "purpose": "Documentation",
+      "fileCount": 0,
+      "lastAccessed": 1774272392621,
+      "keyFiles": []
+    },
+    "plugins": {
+      "path": "plugins",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1774272392621,
+      "keyFiles": []
+    },
+    "prompt": {
+      "path": "prompt",
+      "purpose": null,
+      "fileCount": 3,
+      "lastAccessed": 1774272392621,
+      "keyFiles": [
+        "crystalize-prompt.md",
+        "design-pipeline.md",
+        "handoff.md"
+      ]
+    },
+    "tmuxinator": {
+      "path": "tmuxinator",
+      "purpose": null,
+      "fileCount": 5,
+      "lastAccessed": 1774272392622,
+      "keyFiles": [
+        "company.yml",
+        "personal.yml",
+        "setup.sh"
+      ]
+    }
+  },
+  "hotPaths": [
+    {
+      "path": "",
+      "accessCount": 1,
+      "lastAccessed": 1774272414775,
+      "type": "directory"
+    },
+    {
+      "path": "prompt/crystalize-prompt.md",
+      "accessCount": 1,
+      "lastAccessed": 1774272633310,
+      "type": "file"
+    },
+    {
+      "path": "prompt/zsh-completion-setup.md",
+      "accessCount": 1,
+      "lastAccessed": 1774272647834,
+      "type": "file"
+    }
+  ],
+  "userDirectives": []
+}
