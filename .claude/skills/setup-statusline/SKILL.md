@@ -9,14 +9,15 @@ allowed-tools: Bash(chmod:*), Bash(mkdir:*), Bash(jq:*), Bash(cp:*), Bash(test:*
 새 머신의 Claude Code statusline을 아래 형식으로 세팅한다.
 
 ```
-web-1.7.0/feat-pharmaci... [wt1]  |  ctx:16%  5h:32%  7d:11%
-└──────── green ──────────┘       └── yellow ─┘└── grey ────┘
+web-1.7.0/feat-pharmaci... [wt1]  |  ctx:16%  5h:13%(3h24min)  7d:9%(3d5h)
+└──────── green ──────────┘       └ yellow ─┘└──────── grey ──────────────┘
 ```
 
 - **branch**: 현재 git 브랜치 (25자 초과 시 `...`로 절단, 초록색)
 - **[worktree]**: `--worktree` 세션일 때만 표시, 초록색
 - **ctx:N%**: 컨텍스트 **사용률** (0→100으로 증가). 임계치 이상이면 노랑, 미만이면 회색
-- **5h:N% / 7d:N%**: 구독 레이트리밋 **사용률**. 임계치 이상이면 노랑, 미만이면 회색
+- **5h:N%(남은시간) / 7d:N%(남은시간)**: 구독 레이트리밋 **사용률 + 윈도우 리셋까지 남은 시간**. 임계치 이상이면 노랑, 미만이면 회색
+- 남은 시간 포맷: `Nd Nh` (1일 이상) → `Nh Nmin` (1시간 이상) → `Nmin` (1시간 미만)
 - 구분자 `|`은 기본 색
 
 기본 임계치: `ctx ≥ 15%`, `5h ≥ 80%`, `7d ≥ 80%`.
@@ -49,8 +50,15 @@ jq '.statusLine = { type: "command", command: "bash \($ENV.HOME)/.claude/statusl
 샘플 입력으로 예상 출력을 확인한다.
 
 ```bash
-echo '{"workspace":{"current_dir":"'"$PWD"'","git_worktree":"wt1"},"context_window":{"remaining_percentage":84},"rate_limits":{"five_hour":{"used_percentage":32},"seven_day":{"used_percentage":11}}}' \
-  | bash "$HOME/.claude/statusline-command.sh"
+NOW=$(date +%s)
+jq -n --argjson five $((NOW + 3*3600 + 24*60)) --argjson week $((NOW + 3*86400 + 5*3600)) '{
+  workspace: {current_dir: "'"$PWD"'", git_worktree: "wt1"},
+  context_window: {remaining_percentage: 84},
+  rate_limits: {
+    five_hour: {used_percentage: 13, resets_at: $five},
+    seven_day: {used_percentage: 9,  resets_at: $week}
+  }
+}' | bash "$HOME/.claude/statusline-command.sh"
 ```
 
 ANSI 이스케이프(`\033[32m` 등)를 포함한 한 줄 문자열이 나오면 성공. Claude Code를 재시작하거나 `/reload-plugins`를 실행하면 하단 statusline에 반영된다.
@@ -67,6 +75,7 @@ ANSI 이스케이프(`\033[32m` 등)를 포함한 한 줄 문자열이 나오면
 | 임계치 미만 색(idle) | `GREY='\033[90m'`                        |
 | ctx 임계치           | `CTX_THRESHOLD=15` (사용률 기준)         |
 | 5h·7d 임계치         | `FIVE_THRESHOLD=80`, `WEEK_THRESHOLD=80` |
+| 남은 시간 포맷       | `fmt_remaining()` 함수                   |
 | 세그먼트 노출 여부   | 각 `if [ -n "$..." ]` 블록 주석 처리     |
 
 색상 코드: 빨강 `31`, 초록 `32`, 노랑 `33`, 파랑 `34`, 마젠타 `35`, 시안 `36`, 회색 `90`, 밝은 `9x`대.
@@ -85,8 +94,8 @@ ANSI 이스케이프(`\033[32m` 등)를 포함한 한 줄 문자열이 나오면
     "remaining_percentage": 84.0
   },
   "rate_limits": {
-    "five_hour": { "used_percentage": 32.0 },
-    "seven_day": { "used_percentage": 11.0 }
+    "five_hour": { "used_percentage": 32.0, "resets_at": 1776430800 },
+    "seven_day": { "used_percentage": 11.0, "resets_at": 1776981600 }
   }
 }
 ```

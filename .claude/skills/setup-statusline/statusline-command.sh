@@ -6,8 +6,7 @@ YELLOW='\033[33m'
 GREY='\033[90m'
 RESET='\033[0m'
 
-# --- Threshold (in used-percentage). When the segment's used% is >= threshold,
-#     it is rendered yellow; otherwise grey. ---
+# Thresholds (used-percentage). Segment turns yellow when >= threshold, else grey.
 CTX_THRESHOLD=15
 FIVE_THRESHOLD=80
 WEEK_THRESHOLD=80
@@ -18,6 +17,23 @@ pick_color() {
     printf '%s' "$YELLOW"
   else
     printf '%s' "$GREY"
+  fi
+}
+
+# Humanize seconds until rate-limit reset: 3d5h / 3h24min / 12min / 0min
+fmt_remaining() {
+  local s=${1:-0}
+  if [ "$s" -le 0 ]; then echo "0min"; return; fi
+  local h=$(( s / 3600 ))
+  local m=$(( (s % 3600) / 60 ))
+  if [ "$h" -ge 24 ]; then
+    local d=$(( h / 24 ))
+    local rh=$(( h % 24 ))
+    echo "${d}d${rh}h"
+  elif [ "$h" -gt 0 ]; then
+    echo "${h}h${m}min"
+  else
+    echo "${m}min"
   fi
 }
 
@@ -40,9 +56,13 @@ if [ -n "$ctx_remaining" ]; then
   ctx_used=$(awk -v r="$ctx_remaining" 'BEGIN { printf "%.0f", 100 - r }')
 fi
 
-# Rate limits (already used-percentage)
-five=$(echo "$input" | jq -r '.rate_limits.five_hour.used_percentage // empty')
-week=$(echo "$input" | jq -r '.rate_limits.seven_day.used_percentage // empty')
+# Rate limits (used % + reset time)
+five_pct=$(echo "$input" | jq -r '.rate_limits.five_hour.used_percentage // empty')
+five_resets=$(echo "$input" | jq -r '.rate_limits.five_hour.resets_at // empty')
+week_pct=$(echo "$input" | jq -r '.rate_limits.seven_day.used_percentage // empty')
+week_resets=$(echo "$input" | jq -r '.rate_limits.seven_day.resets_at // empty')
+
+now=$(date +%s)
 
 # --- Build output ---
 out=""
@@ -64,18 +84,26 @@ if [ -n "$ctx_used" ]; then
   usage="${color}ctx:${ctx_used}%${RESET}"
 fi
 
-if [ -n "$five" ]; then
-  five_fmt=$(printf "%.0f" "$five")
+if [ -n "$five_pct" ]; then
+  five_fmt=$(printf "%.0f" "$five_pct")
   color=$(pick_color "$five_fmt" "$FIVE_THRESHOLD")
+  label="5h:${five_fmt}%"
+  if [ -n "$five_resets" ]; then
+    label="${label}($(fmt_remaining $(( five_resets - now ))))"
+  fi
   [ -n "$usage" ] && usage="$usage  "
-  usage="${usage}${color}5h:${five_fmt}%${RESET}"
+  usage="${usage}${color}${label}${RESET}"
 fi
 
-if [ -n "$week" ]; then
-  week_fmt=$(printf "%.0f" "$week")
+if [ -n "$week_pct" ]; then
+  week_fmt=$(printf "%.0f" "$week_pct")
   color=$(pick_color "$week_fmt" "$WEEK_THRESHOLD")
+  label="7d:${week_fmt}%"
+  if [ -n "$week_resets" ]; then
+    label="${label}($(fmt_remaining $(( week_resets - now ))))"
+  fi
   [ -n "$usage" ] && usage="$usage  "
-  usage="${usage}${color}7d:${week_fmt}%${RESET}"
+  usage="${usage}${color}${label}${RESET}"
 fi
 
 if [ -n "$usage" ]; then
